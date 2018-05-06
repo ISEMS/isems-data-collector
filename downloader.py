@@ -2,7 +2,7 @@ import os
 
 import requests
 
-DEFAULT_IP = "http://10.230.77.226/api/ISEMS/ffopenmppt.log"
+DEFAULT_IP = "http://10.36.158.33/ISEMS/ffopenmppt.log"
 
 
 class Downloader:
