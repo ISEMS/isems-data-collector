@@ -1,6 +1,5 @@
 import os
 
-import click
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -11,6 +10,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+if app.env == "development":
+    from flask_cors import CORS
+    CORS(app)
 
 
 @app.cli.command()
