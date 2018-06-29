@@ -16,14 +16,19 @@ class Importer:
     @classmethod
     def parse_line(cls, line):
         parts = line.split(";")
+        VALID_FIELD_COUNTS = [
+            18,  # without status
+            19   # with new status field
+        ]
+        field_count = len(parts)
 
         try:
-            assert len(parts) == 18
-        except AssertionError as e:
+            assert (field_count in VALID_FIELD_COUNTS)
+        except AssertionError:
             print("Assertion failed for line: {}".format(line))
             return None
 
-        return Measurement(
+        measurement = Measurement(
             nodeId=parts[0],
             isemsRevision=parts[1],
             timestamp=datetime.fromtimestamp(int(parts[2])),
@@ -43,4 +48,8 @@ class Importer:
             latitude=float(parts[16]),
             longitude=float(parts[17])
         )
+        if field_count == 19:
+            measurement.status = int(parts[18], 16)
+
+        return measurement
 

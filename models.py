@@ -1,5 +1,6 @@
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from app import db
 
@@ -24,6 +25,7 @@ class Measurement(db.Model):
     ratedSolarModuleCapacity = db.Column(db.Float)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    status = db.Column(db.Integer)
 
     __table_args__ = (UniqueConstraint('nodeId',
                                        'timestamp',
@@ -40,4 +42,6 @@ class Measurement(db.Model):
             return 0
 
     def to_dict(self):
-        return dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
+        raw_dict = dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
+        raw_dict["status"] = "{0:#05x}".format(raw_dict["status"] or 0)
+        return raw_dict
