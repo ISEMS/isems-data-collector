@@ -2,13 +2,14 @@ import os
 
 import requests
 
-DEFAULT_IP = "http://10.36.158.33/ISEMS/ffopenmppt.log"
+DEFAULT_IP = "10.36.158.33"
 
 
 class Downloader:
     @staticmethod
     def get_sources():
-        return os.environ.get("ISEMS_ROUTER_IPS", DEFAULT_IP).split(",")
+        ips = os.environ.get("ISEMS_ROUTER_IPS", DEFAULT_IP).split(",")
+        return ["http://{}/ISEMS/ffopenmppt.log".format(ip) for ip in ips]
 
     @classmethod
     def download_all(cls):
