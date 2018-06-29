@@ -4,11 +4,6 @@ from app import app
 from controllers import MeasurementController
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
 @app.route('/measurements/latest')
 def latest_measurements():
     data = MeasurementController.latest()
