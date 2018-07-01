@@ -1,4 +1,5 @@
 from datetime import datetime
+import pendulum
 
 from models import Measurement
 
@@ -31,7 +32,7 @@ class Importer:
         measurement = Measurement(
             nodeId=parts[0],
             isemsRevision=parts[1],
-            timestamp=datetime.fromtimestamp(int(parts[2])),
+            timestamp=datetime.fromtimestamp(int(parts[2]), tz=pendulum.timezone("Europe/Berlin")),
             openMPPTFirmwareVersion=parts[3],
             timeToShutdown=parts[4],
             isPowerSaveMode=(parts[5] == "1"),
