@@ -1,11 +1,26 @@
 import os
+from datetime import datetime
+from json import JSONEncoder
 
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
 
-app = Flask(__name__)
+
+class ISODateJSONEncoder(JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
+
+        return super().default(o)
+
+
+class MyFlask(Flask):
+    json_encoder = ISODateJSONEncoder
+
+
+app = MyFlask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", 'sqlite:////tmp/test.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
