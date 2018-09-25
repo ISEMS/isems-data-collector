@@ -6,7 +6,7 @@ from models import Measurement
 
 
 def test_parse_line_invalid():
-    assert Importer.parse_line("") == None
+    assert Importer.parse_line("") is None
 
 
 def test_parse_line_version_1():
