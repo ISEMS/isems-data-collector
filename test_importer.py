@@ -1,8 +1,8 @@
 import datetime
-from unittest.mock import patch, MagicMock
+import pendulum
 
 from importer import Importer
-from models import Measurement
+from models import Measurement, db
 
 
 def test_parse_line_invalid():
@@ -63,3 +63,14 @@ def test_parse_line_version_2():
     assert measurement.status == int("300", 16)
 
 
+def test_bulk_import_new_measurements():
+    measurement = Measurement(timestamp=datetime.datetime(2017, 1, 1, 1, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node')
+    measurement.save()
+
+    old_count = db.session.query(Measurement).count()
+    import_measurements = [Measurement(timestamp=datetime.datetime(2017, 1, 1, 0, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node'),
+                           Measurement(timestamp=datetime.datetime(2017, 1, 1, 2, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node')]
+    insert_count = Importer._bulk_import_new_measurements(import_measurements)
+
+    assert insert_count == 1
+    assert db.session.query(Measurement).count() == old_count + 1
