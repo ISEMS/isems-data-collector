@@ -63,15 +63,3 @@ def test_parse_line_version_2():
     assert measurement.status == int("300", 16)
 
 
-@patch("importer.Importer.parse_line")
-def test_from_lines(mock_parse_line):
-    mock_measurement = Measurement()
-    mock_measurement.save = MagicMock(return_value=1)
-    mock_parse_line.return_value = mock_measurement
-
-    inserted_count = Importer.from_lines(["line1", "line2"])
-
-    assert inserted_count == 2
-
-
-
