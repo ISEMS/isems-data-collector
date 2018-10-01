@@ -32,7 +32,7 @@ class Importer:
     @classmethod
     def _one_by_one_import_all(cls, measurements):
         counter = 0
-        for measurement in measurements:
+        for measurement in [m for m in measurements if m is not None]:
             counter += measurement.save()
         return counter
 
