@@ -1,17 +1,39 @@
 from datetime import datetime
 import pendulum
+from sqlalchemy import func, desc
+from sqlalchemy.exc import IntegrityError
 
-from models import Measurement
+from models import Measurement, db
 
 
 class Importer:
     @classmethod
     def from_lines(cls, lines):
+        measurements = [cls.parse_line(line) for line in lines]
+
+        try:
+            insert_count = cls._bulk_import_new_measurements(measurements)
+        except IntegrityError:
+            insert_count = cls._one_by_one_import_all(measurements)
+        return insert_count
+
+    @classmethod
+    def _bulk_import_new_measurements(cls, measurements):
+        (max_timestamp, ) = db.session.query(Measurement.timestamp) \
+            .filter(Measurement.nodeId == measurements[0].nodeId) \
+            .order_by(desc(Measurement.timestamp)) \
+            .first()
+        max_timestamp = max_timestamp.replace(tzinfo=pendulum.timezone("Europe/Berlin"))
+        new_measurements = [m for m in measurements if m.timestamp > max_timestamp]
+        db.session.bulk_save_objects(new_measurements)
+        db.session.commit()
+        return len(new_measurements)
+
+    @classmethod
+    def _one_by_one_import_all(cls, measurements):
         counter = 0
-        for line in lines:
-            measurement = cls.parse_line(line)
-            if measurement:
-                counter += measurement.save()
+        for measurement in [m for m in measurements if m is not None]:
+            counter += measurement.save()
         return counter
 
     @classmethod
