@@ -1,5 +1,8 @@
 import datetime
+from unittest.mock import patch, MagicMock
+
 import pendulum
+from sqlalchemy.exc import IntegrityError
 
 from importer import Importer
 from models import Measurement, db
@@ -61,6 +64,24 @@ def test_parse_line_version_2():
     assert measurement.latitude == 52.507309;
     assert measurement.longitude == 13.458635
     assert measurement.status == int("300", 16)
+
+
+@patch("importer.Importer._bulk_import_new_measurements", side_effect=IntegrityError("Mock", "Mock", "Mock"))
+@patch("importer.Importer._one_by_one_import_all")
+def test_from_lines(mock_one_by_one_import, mock_bulk_import):
+    Importer.from_lines([])
+    assert mock_one_by_one_import.called
+    assert mock_bulk_import.called
+
+
+def test__one_by_one_import_all():
+    mock_measurement = Measurement()
+    mock_measurement.save = MagicMock(return_value=1)
+    measurements = [mock_measurement, mock_measurement]
+
+    inserted_count = Importer._one_by_one_import_all(measurements)
+
+    assert inserted_count == 2
 
 
 def test_bulk_import_new_measurements():
