@@ -32,7 +32,7 @@ running the application. You can start it with `flask run`
 ## Updating data
 The app does not automatically call the routers configured in `ISEMS_ROUTER_IPS`. This
 should be triggered by a cronjob when it is deployed. You can also test it locally though
-by running `flask update_data`
+by running `flask update-data`
 
 
 ## Testing
