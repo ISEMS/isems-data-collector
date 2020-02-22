@@ -84,14 +84,25 @@ def test__one_by_one_import_all():
     assert inserted_count == 2
 
 
+def test_bulk_import_new_measurements_empyt_db():
+    Measurement.query.delete()
+    import_measurements = [Measurement(timestamp=datetime.datetime(2017, 1, 1, 0, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node'),
+                           Measurement(timestamp=datetime.datetime(2017, 1, 1, 2, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node')]
+    insert_count = Importer._bulk_import_new_measurements(import_measurements)
+
+    assert insert_count == 2
+    assert db.session.query(Measurement).count() == 2
+
+
 def test_bulk_import_new_measurements():
+    Measurement.query.delete()
     measurement = Measurement(timestamp=datetime.datetime(2017, 1, 1, 1, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node')
     measurement.save()
 
-    old_count = db.session.query(Measurement).count()
+    # One entry is older than the latest entry so it should not be imported
     import_measurements = [Measurement(timestamp=datetime.datetime(2017, 1, 1, 0, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node'),
                            Measurement(timestamp=datetime.datetime(2017, 1, 1, 2, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node')]
     insert_count = Importer._bulk_import_new_measurements(import_measurements)
 
     assert insert_count == 1
-    assert db.session.query(Measurement).count() == old_count + 1
+    assert db.session.query(Measurement).count() == 2

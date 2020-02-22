@@ -1,4 +1,4 @@
-from sqlalchemy import UniqueConstraint
+from sqlalchemy import UniqueConstraint, desc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -45,3 +45,12 @@ class Measurement(db.Model):
         raw_dict = dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
         raw_dict["status"] = "{0:#05x}".format(raw_dict["status"] or 0)
         return raw_dict
+
+    @staticmethod
+    def get_latest_timestamp(node_id):
+        latest_for_node = db.session.query(Measurement.timestamp) \
+            .filter(Measurement.nodeId == node_id) \
+            .order_by(desc(Measurement.timestamp)) \
+            .first()
+        if latest_for_node:
+            return latest_for_node[0]

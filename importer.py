@@ -19,12 +19,12 @@ class Importer:
 
     @classmethod
     def _bulk_import_new_measurements(cls, measurements):
-        (max_timestamp, ) = db.session.query(Measurement.timestamp) \
-            .filter(Measurement.nodeId == measurements[0].nodeId) \
-            .order_by(desc(Measurement.timestamp)) \
-            .first()
-        max_timestamp = max_timestamp.replace(tzinfo=pendulum.timezone("Europe/Berlin"))
-        new_measurements = [m for m in measurements if m.timestamp > max_timestamp]
+        max_timestamp = Measurement.get_latest_timestamp(measurements[0].nodeId)
+        if max_timestamp:
+            max_timestamp = max_timestamp.replace(tzinfo=pendulum.timezone("Europe/Berlin"))
+            new_measurements = [m for m in measurements if m.timestamp > max_timestamp]
+        else:
+            new_measurements = measurements
         db.session.bulk_save_objects(new_measurements)
         db.session.commit()
         return len(new_measurements)
