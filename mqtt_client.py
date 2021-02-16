@@ -17,7 +17,7 @@ class MQTTClient:
     @staticmethod
     def _on_connect(client, userdata, flags, rc):
         print("Connected with result code " + str(rc))
-        client.subscribe("isems/+/csvlog")
+        client.subscribe("/isems/+/csvlog")
 
     @staticmethod
     def _on_message(client, userdata, msg):
