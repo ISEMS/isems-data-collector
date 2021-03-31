@@ -40,6 +40,12 @@ def update_data():
     Updater().update_all()
 
 
+@app.cli.command()
+def subscribe():
+    from mqtt_client import MQTTClient
+    MQTTClient().start()
+
+
 from views import *
 
 if __name__ == '__main__':
