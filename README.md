@@ -30,12 +30,29 @@ running the application. You can start it with `flask run`
 
 
 ## Updating data
-The app does not automatically call the routers configured in `ISEMS_ROUTER_IPS`. This
-should be triggered by a cronjob when it is deployed. You can also test it locally though
-by running `flask update-data`
+There are two ways in which the app can look for data. It can either manually
+call a set of predefined node IP-addresses to collect information from them, or it 
+can subscribe to a central MQTT broker to which all the nodes send their data.
+
+### Option 1: isems-data-collector talks to nodes directly
+If you want the data-collector to talk to the individual nodes, you should configure
+the `ISEMS_ROUTER_IPS` environment variable to a comma separated list of IP addresses.
+You can then trigger an import by calling `flask update-data` from the repository root.
+Note that this only does a one time import. In order to continuously pull new data,
+you should set up a cronjob.
+
+### Option 2: isems-data-collector subscribes to central MQTT broker
+If you want to load data from a central MQTT broker, set the `MQTT_SERVER` environment
+variable to the domain of the broker. You can then call `flask subscribe` which will
+start a long-running process that will subscribe to the broker and update the data in
+the local database, whenever it is received from the broker.
 
 
 ## Testing
 ```bash
 pytest
 ```
+
+## Deploying
+The complete ISEMS setup can be deployed with [isems-ansible](https://github.com/isems/isems-ansible).
+Refer to the documentation there for more information.
