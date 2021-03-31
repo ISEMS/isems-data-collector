@@ -12,7 +12,7 @@ def test_parse_line_invalid():
     assert Importer.parse_line("") is None
 
 
-def test_parse_line_version_1():
+def test_parse_line_version_1(client):
     line = "Elektra-Dach;1;1530364575;ATmega8_A_1;711;0;18.614;18.614;14.073;100;100;28;11.67;14.086;7;20;52.507309;13.458635"
     measurement = Importer.parse_line(line)
 
@@ -39,7 +39,7 @@ def test_parse_line_version_1():
     assert measurement.status is None
 
 
-def test_parse_line_version_2():
+def test_parse_line_version_2(client):
     line = "Elektra-Dach-Neu;1;1530364575;ATmega8_A_1;711;0;18.614;18.614;14.073;100;100;28;11.67;14.086;7;20;52.507309;13.458635;300"
     measurement = Importer.parse_line(line)
 
@@ -84,8 +84,7 @@ def test__one_by_one_import_all():
     assert inserted_count == 2
 
 
-def test_bulk_import_new_measurements_empyt_db():
-    Measurement.query.delete()
+def test_bulk_import_new_measurements_empyt_db(client):
     import_measurements = [Measurement(timestamp=datetime.datetime(2017, 1, 1, 0, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node'),
                            Measurement(timestamp=datetime.datetime(2017, 1, 1, 2, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node')]
     insert_count = Importer._bulk_import_new_measurements(import_measurements)
@@ -94,8 +93,7 @@ def test_bulk_import_new_measurements_empyt_db():
     assert db.session.query(Measurement).count() == 2
 
 
-def test_bulk_import_new_measurements():
-    Measurement.query.delete()
+def test_bulk_import_new_measurements(client):
     measurement = Measurement(timestamp=datetime.datetime(2017, 1, 1, 1, tzinfo=pendulum.timezone("Europe/Berlin")), nodeId='test_node')
     measurement.save()
 

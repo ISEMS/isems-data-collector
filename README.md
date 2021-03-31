@@ -47,6 +47,28 @@ variable to the domain of the broker. You can then call `flask subscribe` which 
 start a long-running process that will subscribe to the broker and update the data in
 the local database, whenever it is received from the broker.
 
+## Endpoints
+### `/measurements/latest`
+Returns the latest measurement for each node known to the system that has been active within the 
+last 30 days (configurable with `HIDE_INACTIVE_AFTER_DAYS`).
+You can add `?all=true` to also show data for nodes that have not been active for a longer time.
+This endpoint is used by the app for the overview page.
+
+### `/measurements/<node_id>/latest`
+Returns the latest (60 * 24 = 1440) measurements for the given node. 
+This endpoint is used by the app for charting details for the node.
+
+
+## Configuration
+The behavior of the data-collector can be configured via the following environment variables:
+
+|Name|Description|Default Value|
+|----|----|----|
+|DATABASE_URL|The url to the database|`sqlite:////tmp/test.db`|
+|HIDE_INACTIVE_AFTER_DAYS|Number of days after which nodes should no longer appear in `/measurements/latest` if they have not sent data|`30`|
+|ISEMS_ROUTER_IPS|Nodes to query for data, comma separated (used in Option 1 described above)|`10.36.158.33`|
+|MQTT_SERVER|Domain name for the MQTT broker to subscribe to (used in Option 2 described above)|_None_|
+|SENTRY_DSN|If configured, the [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) to use to send data to Sentry |_None_|
 
 ## Testing
 ```bash
