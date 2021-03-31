@@ -1,6 +1,5 @@
 from sqlalchemy import UniqueConstraint, desc
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.hybrid import hybrid_property
 
 from app import db
 
