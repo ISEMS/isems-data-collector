@@ -1,2 +1,2 @@
-Flask-Cors==3.0.4
+Flask-Cors==3.0.9
 pytest==5.3.5
