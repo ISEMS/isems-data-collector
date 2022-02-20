@@ -1,7 +1,7 @@
 pendulum
 Flask==1.0.2
 Flask-Migrate==2.1.1
-Flask-SQLAlchemy==2.3.2
+Flask-SQLAlchemy==2.5.1
 paho-mqtt==1.5.1
 requests==2.25.0
 raven[flask]
