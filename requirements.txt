@@ -10,7 +10,7 @@ blinker==1.7.0
     # via raven
 certifi==2023.11.17
     # via requests
-chardet==3.0.4
+charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via flask
@@ -26,6 +26,8 @@ flask-sqlalchemy==2.5.1
     # via
     #   -r requirements.in
     #   flask-migrate
+greenlet==3.0.1
+    # via sqlalchemy
 idna==2.10
     # via requests
 importlib-metadata==6.9.0
@@ -51,7 +53,7 @@ pytzdata==2020.1
     # via pendulum
 raven[flask]==6.10.0
     # via -r requirements.in
-requests==2.25.0
+requests==2.31.0
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
