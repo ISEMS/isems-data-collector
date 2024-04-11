@@ -28,7 +28,7 @@ flask-sqlalchemy==2.5.1
     #   flask-migrate
 greenlet==3.0.1
     # via sqlalchemy
-idna==2.10
+idna==3.7
     # via requests
 importlib-metadata==6.9.0
     # via flask
