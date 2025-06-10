@@ -53,7 +53,7 @@ pytzdata==2020.1
     # via pendulum
 raven[flask]==6.10.0
     # via -r requirements.in
-requests==2.32.0
+requests==2.32.4
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
