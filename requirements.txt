@@ -63,7 +63,7 @@ sqlalchemy==1.4.37
     #   flask-sqlalchemy
 typing-extensions==4.8.0
     # via alembic
-urllib3==1.26.19
+urllib3==2.5.0
     # via requests
 werkzeug==3.0.6
     # via flask
