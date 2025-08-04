@@ -1,5 +1,12 @@
 # ISEMS Data Collector [![Build Status](https://travis-ci.com/ISEMS/isems-data-collector.svg?branch=master)](https://travis-ci.com/ISEMS/isems-data-collector) [![codecov](https://codecov.io/gh/ISEMS/isems-data-collector/branch/master/graph/badge.svg)](https://codecov.io/gh/ISEMS/isems-data-collector)
 
+
+> [!IMPORTANT]
+> This project (being the frontend, along with the [frontend](https://github.com/isems/isems-app)) is no
+> longer being maintained and therefore marked as archived. The hardware part of the project lives on though. You
+> can find more information on the project (along with an alternative data tarnsport mechanism via MQTT)
+> on the website [isems.de](https://www.isems.de).
+
 This is the backend for ISEMS. It is a small Python app that should be deployed on a 
 server (such as a raspberry pi) that is deployed in a mesh network which has solar powered nodes. 
 
